@@ -32,13 +32,13 @@ class User(
     override fun getPassword() = password
 
     @JsonIgnore
-    override fun getUsername() = name
+    override fun getUsername() = id
 
     @JsonIgnore
-    override fun isAccountNonExpired() = false
+    override fun isAccountNonExpired() = true
 
     @JsonIgnore
-    override fun isAccountNonLocked() = false
+    override fun isAccountNonLocked() = true
 
     @JsonIgnore
     override fun isCredentialsNonExpired() = true

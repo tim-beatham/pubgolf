@@ -36,7 +36,7 @@ class JwtTokenUtil(val secret : String = "9cd09543ad753cc6e370023e6daed19d12093c
         return true
     }
 
-    fun getEmail(token: String): String {
+    fun getId(token: String): String {
         return Jwts.parserBuilder()
             .setSigningKey(secret)
             .build()
