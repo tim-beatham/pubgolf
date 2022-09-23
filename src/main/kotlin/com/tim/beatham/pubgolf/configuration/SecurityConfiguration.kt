@@ -41,9 +41,8 @@ class SecurityConfiguration(private val userRepository: UserRepository,
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .authorizeRequests()
-            .anyRequest().authenticated()
-            .and()
+            .authorizeRequests().antMatchers("/api/users/login", "/api/users/register").permitAll()
+            .anyRequest().authenticated().and()
             .exceptionHandling()
             .authenticationEntryPoint(authException)
 

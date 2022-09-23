@@ -52,7 +52,7 @@ class JwtTokenFilter : OncePerRequestFilter() {
     private fun setWebAuthenticationDetails(token: String, request: HttpServletRequest) {
         val userDetails = userRepository.findByEmail(jwtTokenUtil.getEmail(token)).orElse(null)
         val authenticationToken = UsernamePasswordAuthenticationToken(userDetails,
-            null, userDetails?.authorities ?: mutableListOf())
+            null, mutableListOf())
 
         authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authenticationToken

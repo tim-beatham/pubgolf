@@ -5,12 +5,9 @@ import com.tim.beatham.pubgolf.controllers.UserController
 import com.tim.beatham.pubgolf.repositories.UserRepository
 import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
-import org.h2.engine.User
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get

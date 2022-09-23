@@ -8,7 +8,7 @@ import java.lang.Exception
 import java.util.*
 
 @Component
-class JwtTokenUtil(val secret : String = "secret123") {
+class JwtTokenUtil(val secret : String = "9cd09543ad753cc6e370023e6daed19d12093cb5fc79f69dbd1f7f3bbb9570939cd09543ad753cc6e370023e6daed19d12093cb5fc79f69dbd1f7f3bbb957093") {
     companion object {
         const val EXPIRE_DURATION = 24 * 60 * 60 * 1000
     }
@@ -27,18 +27,20 @@ class JwtTokenUtil(val secret : String = "secret123") {
             Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
-                .parseClaimsJwt(token)
-            return true
-        } catch (e: Exception) {}
+                .parseClaimsJws(token)
+        } catch (e: Exception) {
+            println(e)
+            return false
+        }
 
-        return false;
+        return true
     }
 
     fun getEmail(token: String): String {
         return Jwts.parserBuilder()
             .setSigningKey(secret)
             .build()
-            .parseClaimsJwt(token)
+            .parseClaimsJws(token)
             .body.subject.split(" ")[0]
     }
 }
