@@ -1,6 +1,7 @@
 package com.tim.beatham.pubgolf.configuration
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -11,8 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class JwtAuthenticationManager : AuthenticationManager {
 
-    @Autowired
-    private lateinit var passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder = BCryptPasswordEncoder()
 
     @Autowired
     private lateinit var jwtUserDetailsService: JwtUserDetailsService
@@ -25,5 +25,10 @@ class JwtAuthenticationManager : AuthenticationManager {
         }
 
         return UsernamePasswordAuthenticationToken(userDetail, userDetail.password)
+    }
+
+    @Bean
+    fun passwordEncoder(): BCryptPasswordEncoder {
+        return passwordEncoder
     }
 }

@@ -1,21 +1,31 @@
 package com.tim.beatham.pubgolf.configuration
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration(private val jwtTokenFilter : JwtTokenFilter,
-                            private val authException: AuthException) {
+class SecurityConfiguration(private val authException: AuthException) {
+
+    @Autowired
+    private lateinit var jwtTokenFilter: JwtTokenFilter
+
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer {
+            web ->
+                web.ignoring().antMatchers("/api/users/login", "/api/users/register")
+        }
+    }
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -23,12 +33,11 @@ class SecurityConfiguration(private val jwtTokenFilter : JwtTokenFilter,
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .authorizeRequests().antMatchers("/api/users/login", "/api/users/register").permitAll()
+            .authorizeRequests()
             .anyRequest().authenticated().and()
+            .addFilter(jwtTokenFilter)
             .exceptionHandling()
             .authenticationEntryPoint(authException)
-
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
@@ -43,10 +52,5 @@ class SecurityConfiguration(private val jwtTokenFilter : JwtTokenFilter,
         config.addAllowedMethod("*")
         source.registerCorsConfiguration("/**", config)
         return CorsFilter(source)
-    }
-
-    @Bean
-    fun passwordEncoder(): BCryptPasswordEncoder {
-        return BCryptPasswordEncoder()
     }
 }
